@@ -25,7 +25,7 @@ def post_comment(comment):
     else:
         print(f"Failed to post comment: {response.text}")
 
-#with open("results/ai-feedback.txt", "r") as feedback_file:
-#    comment = feedback_file.read()
+with open("results/ai-feedback.txt", "r") as feedback_file:
+    comment = feedback_file.read()
 
-post_comment("Test comment")
+post_comment(comment)
