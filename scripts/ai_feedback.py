@@ -62,7 +62,8 @@ def get_changed_files():
         if response.status_code == 200:
             files = response.json()
             for file in files:
-                changed_files.append(file['filename'])
+                if file['filename'].endswith('.java'):  # Only include .java files
+                    changed_files.append(file['filename'])
             return changed_files
         else:
             print(f"Failed to fetch changed files: {response.status_code} {response.text}")
