@@ -1,8 +1,20 @@
 from openai import OpenAI
-import subprocess
 import os
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+GITHUB_TOKEN = os.getenv("YOUR_GITHUB_TOKEN")
+
+if not GITHUB_TOKEN:
+    print("Error: GITHUB_TOKEN is not set.")
+    sys.exit(1)  # Exit with error
+
+REPO = "ankit03jangra/aifeedback-test"
+PR_NUMBER = 1  # Replace with the pull request number
+
+headers = {
+    "Authorization": f"Bearer {GITHUB_TOKEN}",
+    "Content-Type": "application/json"
+}
 
 # Replace with your OpenAI API key
 def analyze_code(file_path):
@@ -39,23 +51,23 @@ def analyze_code(file_path):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Get the list of updated files from the latest commit
-def get_updated_files():
+def get_changed_files():
+    url = f"https://api.github.com/repos/{REPO}/pulls/{PR_NUMBER}/files"
+    changed_files = []
+
     try:
-        # Fetch the list of files changed in the latest commit or pull request
-        result = subprocess.run(
-            ['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=True
-        )
-        # Return only files with specific extensions
-        files = [f for f in result.stdout.splitlines() if f.endswith(('.java'))]
-        return files
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            files = response.json()
+            for file in files:
+                changed_files.append(file['filename'])
+            return changed_files
+        else:
+            print(f"Failed to fetch changed files: {response.status_code} {response.text}")
+            sys.exit(1)
     except Exception as e:
-        print(f"Error retrieving updated files: {e}")
-        return []
+        print(f"Error: {e}")
+        sys.exit(1)
 
 updated_files = get_updated_files()
 os.makedirs("results", exist_ok=True)  # Ensure the output directory exists
