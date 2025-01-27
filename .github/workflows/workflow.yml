@@ -61,5 +61,6 @@ jobs:
     steps:
       # Step 1: Post comments to PR using GitHub API
       - name: Post Comments
-        run: |
-          python scripts/post_comments_to_pr.py
+        run: python scripts/post_comments_to_pr.py
+        env:
+          YOUR_GITHUB_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN}}
