@@ -71,7 +71,7 @@ def get_changed_files():
         print(f"Error: {e}")
         sys.exit(1)
 
-updated_files = get_updated_files()
+updated_files = get_changed_files()
 os.makedirs("results", exist_ok=True)  # Ensure the output directory exists
 if updated_files:
     print(f"Found updated files: {updated_files}")

@@ -9,7 +9,7 @@ if not GITHUB_TOKEN:
     sys.exit(1)  # Exit with error
 
 REPO = "ankit03jangra/aifeedback-test"
-PR_NUMBER = 1  # Replace with the pull request number
+PR_NUMBER = os.getenv("PR_NUMBER")
 
 headers = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -26,6 +26,8 @@ def post_comment(comment):
     else:
         print(f"Failed to post comment: {response.text}")
 
+feedback_combined = ""
+
 # Iterate through all files in the artifact directory
 for file_name in os.listdir("results"):
     file_path = os.path.join("results", file_name)
@@ -33,7 +35,11 @@ for file_name in os.listdir("results"):
         try:
             with open(file_path, "r") as feedback_file:
                 comment = feedback_file.read()
-            print(f"Posting feedback from {file_path}...")
-            post_comment(comment)
+                feedback_combined += f"### Feedback for {file_name}\n{comment}\n\n"
         except Exception as e:
             print(f"Error reading or posting comment for {file_path}: {e}")
+
+if feedback_combined:
+    post_comment(feedback_combined)
+else:
+    print("No feedback to post.")
