@@ -55,7 +55,7 @@ jobs:
     if: ${{ success() }}  # Runs only if 'analyze-code' completes successfully
 
     steps:
-      - # Step 1: Check out the repository code
+      # Step 1: Check out the repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
