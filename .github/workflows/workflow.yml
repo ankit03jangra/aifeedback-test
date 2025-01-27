@@ -39,7 +39,7 @@ jobs:
       # Step 3: Run AI-powered feedback generator
       - name: AI Feedback
         run: |
-          python ai_feedback.py
+          python scripts/ai_feedback.py
 
       # Step 4: Post results (optional if posting to PR or saving logs)
       - name: Upload Results
@@ -57,4 +57,4 @@ jobs:
       # Step 1: Post comments to PR using GitHub API
       - name: Post Comments
         run: |
-          python post_comments_to_pr.py
+          python scripts/post_comments_to_pr.py
