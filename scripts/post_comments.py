@@ -25,7 +25,14 @@ def post_comment(comment):
     else:
         print(f"Failed to post comment: {response.text}")
 
-with open("results/ai-feedback.txt", "r") as feedback_file:
-    comment = feedback_file.read()
-
-post_comment(comment)
+# Iterate through all files in the artifact directory
+for file_name in os.listdir("results"):
+    file_path = os.path.join(artifact_dir, file_name)
+    if os.path.isfile(file_path):  # Process only files
+        try:
+            with open(file_path, "r") as feedback_file:
+                comment = feedback_file.read()
+            print(f"Posting feedback from {file_path}...")
+            post_comment(comment)
+        except Exception as e:
+            print(f"Error reading or posting comment for {file_path}: {e}")

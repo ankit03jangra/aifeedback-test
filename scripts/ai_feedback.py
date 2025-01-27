@@ -51,7 +51,7 @@ def get_updated_files():
             check=True
         )
         # Return only files with specific extensions
-        files = [f for f in result.stdout.splitlines() if f.endswith(('.java', '.py'))]
+        files = [f for f in result.stdout.splitlines() if f.endswith(('.java'))]
         return files
     except Exception as e:
         print(f"Error retrieving updated files: {e}")
