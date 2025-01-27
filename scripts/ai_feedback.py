@@ -33,7 +33,6 @@ def analyze_code(file_path):
                                                             - Highlight best practices and areas for improvement.
                                                             - Identify potential bugs, performance issues, or edge cases.
                                                             - Suggest improvements for security and efficiency.
-                                                            - Point out missing tests or documentation.
 
                                                             Do not summarize the code or provide generic feedback. Provide concise, actionable comments.
 
@@ -41,7 +40,7 @@ def analyze_code(file_path):
                                                             {code}
                                                         """}
                 ],
-        max_tokens=150,
+        max_tokens=200,
         temperature=0.7)
         return response.choices[0].message.content.strip()
     except client.error.RateLimitError:
