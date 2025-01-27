@@ -12,7 +12,19 @@ def analyze_code(file_path):
         response = client.chat.completions.create(model="gpt-3.5-turbo",
         messages=[
                     {"role": "system", "content": "You are an expert code reviewer."},
-                    {"role": "user", "content": f"Analyze the following code and provide feedback:\n\n{code}"}
+                    {"role": "user", "content": f"""
+                                                            Analyze the following code and provide specific, actionable feedback:
+                                                            - Focus on readability, structure, and maintainability.
+                                                            - Highlight best practices and areas for improvement.
+                                                            - Identify potential bugs, performance issues, or edge cases.
+                                                            - Suggest improvements for security and efficiency.
+                                                            - Point out missing tests or documentation.
+
+                                                            Do not summarize the code or provide generic feedback. Provide concise, actionable comments.
+
+                                                            Code to review:
+                                                            {code}
+                                                        """}
                 ],
         max_tokens=150,
         temperature=0.7)
