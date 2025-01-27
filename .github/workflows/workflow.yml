@@ -18,6 +18,8 @@ jobs:
       # Step 1: Check out the repository code
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire commit history for git diff
 
       # Step 2: Set up Python environment (if needed for AI feedback script)
       - name: Set up Python
@@ -58,6 +60,8 @@ jobs:
       # Step 1: Check out the repository code
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire commit history for git diff
 
       # Step 2: Download the Artifact
       - name: Download Results Artifact

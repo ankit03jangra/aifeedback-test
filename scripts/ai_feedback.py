@@ -13,7 +13,7 @@ def analyze_code(file_path):
         messages=[
                     {"role": "system", "content": "You are an expert code reviewer."},
                     {"role": "user", "content": f"""
-                                                            Analyze the following code and provide specific, actionable feedback:
+                                                            Analyze the following code and provide specific, actionable feedback within 150 words:
                                                             - Focus on readability, structure, and maintainability.
                                                             - Highlight best practices and areas for improvement.
                                                             - Identify potential bugs, performance issues, or edge cases.
@@ -38,9 +38,35 @@ def analyze_code(file_path):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Example usage
-feedback = analyze_code("src/main/java/com/javatechie/DevopsIntegrationApplication.java")
+# Get the list of updated files from the latest commit
+def get_updated_files():
+    try:
+        # Fetch the list of files changed in the latest commit or pull request
+        result = subprocess.run(
+            ['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        # Return only files with specific extensions
+        files = [f for f in result.stdout.splitlines() if f.endswith(('.java', '.py'))]
+        return files
+    except Exception as e:
+        print(f"Error retrieving updated files: {e}")
+        return []
+
+updated_files = get_updated_files()
 os.makedirs("results", exist_ok=True)  # Ensure the output directory exists
-with open("results/ai-feedback.txt", "w") as output_file:
-   output_file.write(feedback)
-print("AI feedback has been written to results/ai-feedback.txt")
+if updated_files:
+    print(f"Found updated files: {updated_files}")
+    for file_path in updated_files:
+        feedback = analyze_code(file_path)
+        if feedback:
+            # Write feedback to a file named after the analyzed file
+            output_file_path = os.path.join("results", f"{os.path.basename(file_path)}-feedback.txt")
+            with open(output_file_path, "w") as output_file:
+                output_file.write(feedback)
+            print(f"Feedback for {file_path} has been written to {output_file_path}")
+else:
+    print("No updated files to analyze.")
