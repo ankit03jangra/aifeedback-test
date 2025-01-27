@@ -63,4 +63,4 @@ jobs:
       - name: Post Comments
         run: python scripts/post_comments.py
         env:
-          YOUR_GITHUB_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN}}
+          YOUR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}

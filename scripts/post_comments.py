@@ -2,6 +2,11 @@ import requests
 import os
 
 GITHUB_TOKEN = os.getenv("YOUR_GITHUB_TOKEN")
+
+if not GITHUB_TOKEN:
+    print("Error: GITHUB_TOKEN is not set.")
+    sys.exit(1)  # Exit with error
+
 REPO = "ankit03jangra/aifeedback-test"
 PR_NUMBER = 1  # Replace with the pull request number
 
