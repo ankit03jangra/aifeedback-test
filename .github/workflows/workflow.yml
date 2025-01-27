@@ -36,12 +36,16 @@ jobs:
           YOUR_GITHUB_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN}}
         run: echo "Environment variables OPENAI_API_KEY and YOUR_GITHUB_TOKEN are set."
 
-      # Step 3: Run AI-powered feedback generator
+      # Step 4: Install dependencies
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      # Step 5: Run AI-powered feedback generator
       - name: AI Feedback
         run: |
           python scripts/ai_feedback.py
 
-      # Step 4: Post results (optional if posting to PR or saving logs)
+      # Step 6: Post results (optional if posting to PR or saving logs)
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:

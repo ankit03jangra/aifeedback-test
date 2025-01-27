@@ -1,0 +1,1 @@
+openai==1.60.0  # Replace with the latest version if needed
