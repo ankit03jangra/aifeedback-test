@@ -27,7 +27,7 @@ def post_comment(comment):
 
 # Iterate through all files in the artifact directory
 for file_name in os.listdir("results"):
-    file_path = os.path.join(artifact_dir, file_name)
+    file_path = os.path.join("results", file_name)
     if os.path.isfile(file_path):  # Process only files
         try:
             with open(file_path, "r") as feedback_file:
