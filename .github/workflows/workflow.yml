@@ -1,0 +1,86 @@
+name: Code Quality Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  analyze-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire commit history for git diff
+
+      # Step 2: Set up Python environment (if needed for AI feedback script)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.8'
+
+      # Step 3: Pass the OpenAI API Key as an environment variable
+      - name: Set Environment Variables
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUR_GITHUB_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN}}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "Environment variables OPENAI_API_KEY, PR_NUMBER and YOUR_GITHUB_TOKEN are set."
+
+      # Step 4: Install dependencies
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      # Step 5: Run AI-powered feedback generator
+      - name: AI Feedback
+        run: python scripts/ai_feedback.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+
+
+      # Step 6: Post results (optional if posting to PR or saving logs)
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: analysis-results
+          path: results/
+
+  post-comments:
+    needs: analyze-code
+    runs-on: ubuntu-latest
+    if: ${{ success() }}  # Runs only if 'analyze-code' completes successfully
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire commit history for git diff
+
+      # Step 2: Download the Artifact
+      - name: Download Results Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: analysis-results
+          path: results/
+
+      # Step 4: Install dependencies
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      # Step 3: Post comments to PR using GitHub API
+      - name: Post Comments
+        run: python scripts/post_comments.py
+        env:
+          YOUR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
