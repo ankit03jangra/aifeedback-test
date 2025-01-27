@@ -32,7 +32,8 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           YOUR_GITHUB_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN}}
-        run: echo "Environment variables OPENAI_API_KEY and YOUR_GITHUB_TOKEN are set."
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "Environment variables OPENAI_API_KEY, PR_NUMBER and YOUR_GITHUB_TOKEN are set."
 
       # Step 4: Install dependencies
       - name: Install Dependencies
@@ -43,6 +44,8 @@ jobs:
         run: python scripts/ai_feedback.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
 
       # Step 6: Post results (optional if posting to PR or saving logs)
       - name: Upload Results
@@ -75,3 +78,4 @@ jobs:
         run: python scripts/post_comments.py
         env:
           YOUR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PR_NUMBER: ${{ github.event.pull_request.number }}

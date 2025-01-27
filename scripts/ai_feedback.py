@@ -1,15 +1,17 @@
 from openai import OpenAI
 import os
+import sys
+import requests
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 GITHUB_TOKEN = os.getenv("YOUR_GITHUB_TOKEN")
+PR_NUMBER = os.getenv("PR_NUMBER")
 
 if not GITHUB_TOKEN:
     print("Error: GITHUB_TOKEN is not set.")
     sys.exit(1)  # Exit with error
 
 REPO = "ankit03jangra/aifeedback-test"
-PR_NUMBER = 1  # Replace with the pull request number
 
 headers = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
