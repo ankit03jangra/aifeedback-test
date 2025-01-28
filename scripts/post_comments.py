@@ -35,7 +35,8 @@ for file_name in os.listdir("results"):
         try:
             with open(file_path, "r") as feedback_file:
                 comment = feedback_file.read()
-                feedback_combined += f"### Feedback for {file_name}\n{comment}\n\n"
+                class_name_java = file_name.split("-")[0]
+                feedback_combined += f"### Feedback for {class_name_java}\n{comment}\n\n"
         except Exception as e:
             print(f"Error reading or posting comment for {file_path}: {e}")
 
